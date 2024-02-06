@@ -15,12 +15,7 @@ sequelize.sync()
     });
 
 app.post("/createUser", (req, res) => {
-    User.create({
-        user_id: req.body.user_id,
-        name: req.body.name,
-        password: req.body.password,
-        phone_number: req.body.phone_number,
-    }).then((user) => {
+    User.create(req.body).then((user) => {
         res.send("user created successfully");
         console.log('User created successfully:', user.toJSON());
     })
