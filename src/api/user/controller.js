@@ -1,5 +1,6 @@
 const db = require("../../models");
 const User = db.user;
+const {authSchema}=require("../../helpers/validation");
 
 const getAllUsers = async (req, res) => {
     const users = await User.findAll()
@@ -15,8 +16,15 @@ const getOneUser = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
+  
+    const result = await authSchema.validateAsync(req.body);
+   if(result.error){
+    console.log(result.error.details);
+   }else{
     const user = await User.create(req.body)
     res.status(200).send(user)
+   }
+   
 };
 
 const updateUser = async (req, res) => {
