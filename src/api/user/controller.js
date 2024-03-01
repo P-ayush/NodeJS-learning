@@ -1,5 +1,5 @@
-const db = require("../../models");
-const User = db.user;
+ const db = require("../../../models/index");
+const User = db.user1;
 const {authSchema}=require("../../helpers/validation");
 
 const getAllUsers = async (req, res) => {
