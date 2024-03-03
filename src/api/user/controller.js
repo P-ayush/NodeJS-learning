@@ -2,6 +2,7 @@ const db = require("../../../models/index");
 const User = db.user1;
 const { authSchema } = require("../../helpers/validation");
 const bcrypt = require("bcryptjs");
+const { jwtAuthMiddleWare, generateToken } = require("../../helpers/jwt");
 const getAllUsers = async (req, res) => {
     const users = await User.findAll()
     res.status(200).send(users)
@@ -22,15 +23,22 @@ const createUser = async (req, res) => {
         console.log(result.error.details);
     } else {
         try {
-           const password=req.body.password;
+            const password = req.body.password;
             const hash = await bcrypt.hash(password, 10);
-           const info={
-         name:req.body.name,
-         email:req.body.email,
-        password:hash
-           }
+            const info = {
+                name: req.body.name,
+                email: req.body.email,
+                password: hash
+            }
             const user = await User.create(info);
+            const payload = {
+                id: user.id,
+                email: user.email
+            }
+            const token = generateToken(payload);
+            console.log("token is :", token);
             res.status(200).send(user)
+
         } catch (e) {
             console.log(e);
             res.status(500);
